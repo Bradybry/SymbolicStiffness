@@ -9,11 +9,11 @@ class Node:
 
 		self.dx = symbols(f'Delta_{elem}x')
 		self.dy = symbols(f'Delta_{elem}y')
-		self.dt = symbols(f'Theta_{elem}')
+		self.dt = symbols(f'theta_{elem}')
 
-		self.fx = symbols(f'Q_{elem}x')
-		self.fy = symbols(f'Q_{elem}y')
-		self.moment= symbols(f'Q_{elem}xy')
+		self.fx = symbols(f'F_{elem}x')
+		self.fy = symbols(f'F_{elem}y')
+		self.moment= symbols(f'M_{elem}')
 
 		self.set_restraint(restraint)
 	def add_load(self, load=(0,0,0)):
