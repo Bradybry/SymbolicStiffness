@@ -45,7 +45,7 @@ class Node:
 	def set_restraint(self, restraint):
 		self.restraint = restraint
 		#### make restraint types
-		if restraint == None:
+		if restraint is None:
 			self.fx = 0
 			self.fy = 0
 			self.moment= 0
@@ -138,8 +138,7 @@ class Beam:
 	def get_length(self):
 		coordsA = self.nodeA.get_coords()
 		coordsB = self.nodeB.get_coords()
-		L = sqrt((coordsB[1] - coordsA[1])**2 + (coordsB[0] - coordsA[0])**2)
-		return L
+		return sqrt((coordsB[1] - coordsA[1])**2 + (coordsB[0] - coordsA[0])**2)
 	def get_k(self):
 		return self.k
 	def get_node_name(self):
@@ -150,7 +149,7 @@ class Structure:
 	def __init__(self, units=None):
 		self.constructed = False
 		self.solved = False
-		if units==None:
+		if units is None:
 			self.force = None
 			self.dist = None
 			self.moment = None
@@ -204,11 +203,9 @@ class Structure:
 		return K
 
 	def get_K(self):
-		if self.constructed:
-			return self.K
-		else:
+		if not self.constructed:
 			self.combine_k()
-			return self.K
+		return self.K
 	def solve(self, exclude=[]):
 		if self.solved:
 			raise Exception("This structure has already been solved.")
@@ -221,10 +218,7 @@ class Structure:
 			nodeNo = (int(nodeNo)-1)*3
 			D[nodeNo:nodeNo+3] = node.get_disp()
 			Q[nodeNo:nodeNo+3] = node.get_Q()
-		eqs = []
-		for i, row in enumerate(np.dot(K, D)):
-			if Q[i] != row:
-				eqs.append(Eq(Q[i], row))
+		eqs = [Eq(Q[i], row) for i, row in enumerate(np.dot(K, D)) if Q[i] != row]
 		ans = solve(eqs, exclude=exclude)
 		if type(ans) == list:
 			if len(ans) == 1:
